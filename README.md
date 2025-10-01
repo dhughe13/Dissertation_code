@@ -3,7 +3,7 @@ Code for analysis done as part of Dominique Hughes's PhD dissertation: Character
 
 Code is split by Chapters:
 
-Chapter 2: General Methods
+Chapter 2: General Methods (Thresholding)
 
 Chapter 3: Cross-Sectional Differences in Autistic and Neurotypical Aging
 
