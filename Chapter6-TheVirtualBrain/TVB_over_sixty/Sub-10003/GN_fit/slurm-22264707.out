@@ -1,0 +1,6 @@
+2025-01-08 11:41:55,192 - WARNING - tvb.simulator.common - psutil module not available: no warnings will be issued when a
+    simulation may require more memory than available
+2025-01-08 11:42:02,658 - WARNING - tvb.basic.readers - File 'average_orientations' not found in ZIP.
+2025-01-08 11:42:02,659 - WARNING - tvb.basic.readers - File 'hemispheres' not found in ZIP.
+2025-01-08 11:42:02,659 - WARNING - tvb.basic.readers - File 'areas' not found in ZIP.
+[None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]

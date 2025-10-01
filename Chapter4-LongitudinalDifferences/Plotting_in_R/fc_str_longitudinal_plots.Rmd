@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+# Get the R library to read Excel file
+# read excel file
+library(readxl)
+# for graphics
+library('lattice')
+# linear and non-linear mixed effects models
+library('nlme')
+# create tables from tabular data
+library('gt')
+# adding html tables for gt
+library('gtExtras')
+# summarize descriptive statistics
+library('summarytools')
+# MLM descriptive statistics table
+library('sjPlot')
+# Now get the data
+d0 = read_excel("~/Documents/MATLAB/Graph_theory/Dissertation_code/Chapter4_LongitudinalDifferences/Mixed_effects_modeling/str_fc_longitudinal_df.xlsx", na="NaN") 
+# check the dimension
+dim(d0)
+# 374 variable - will need to filter only variable to be analyzed
+# head(d0)
+# print the data summary
+#summary(d0)
+```
+
+```{r}
+# Select the variable for analysis
+d1 = d0[,c("Subject",                       
+"Adjusted_Visit",
+"Age", 
+"Group", 
+"Sex",
+"RM-TCs_R"
+#the variable
+)]
+# After selected the variable, let's standardize the variable names
+colnames(d1) = c("ID",                    
+"Visit",
+"Age",
+"Group",
+"Sex",
+"y2")
+summary(d1)
+```
+
+```{r}
+# create the baseline data
+d1b = d1[d1$Visit==1,]
+# only need the baseline Age information
+d1b = d1b[,c("ID","Age")]
+# Rename the baseline age to bAge
+colnames(d1b) = c("ID","bAge")
+# then merge to the d1 
+d2 = merge(d1,d1b)
+# check the first a few data, all good!
+head(d2)
+dim(d2)
+# remove the NA
+d2 = d2[complete.cases(d2),]
+# add age to Baseline
+d2$Age2b = d2$Age-d2$bAge
+dim(d2)
+# select only individuals 40 and older
+#d2 = d2[d2$Age >= 40,]
+# remove erroneous Age to Baseline outliers
+d2 = d2[d2$Age2b < 10,]
+# remove y outliers
+# d2 = d2[d2$y < 5000,]
+# summary of the data
+summary(d2)
+dim(d2)
+length(unique(d2$ID))
+# Create db with count ID count variable
+d2c = d2 %>% dplyr::count(ID);d2c
+# Merge dbs
+d2=merge(d2,d2c)
+head(d2)
+d2 = d2[d2$n > 1,]
+dim(d2)
+length(unique(d2$ID))
+# html summary graphic
+d2 %>%
+  summarytools::dfSummary() %>%
+  stview()
+```
+
+```{r}
+library(ggplot2)
+ggplot(d2, aes(x=factor(Age2b), y=y2, group=Group, colour=Group)) +
+  geom_smooth(method="lm", linewidth=3) +
+  scale_color_manual(values = c("#EE6677","#4477AA")) +
+  xlab("Change in Age") +
+  ylab("Functional Strength, PFCoi_L") +
+  ggtitle("Functional Strength, TCs_R vs. Change in Age")
+
+ggsave("fc_str_longitudinal_TCsR.png",path="~/Documents/MATLAB/Graph_theory/Dissertation_code/Chapter4_LongitudinalDifferences/Plotting_in_R/")
+```
+
